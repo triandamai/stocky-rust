@@ -1,0 +1,16 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:14.3
+    environment:
+      POSTGRES_USER: triandamai
+      POSTGRES_PASSWORD: triandamai
+      POSTGRES_DB: actix
+    ports:
+      - "5432:5432"
+    restart: always
+
+networks:
+  app:
+    external: true
