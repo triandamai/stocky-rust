@@ -16,6 +16,7 @@ chrono = "0.4.31"
 entity = {path = "entity"}
 migration = {path = "migration"}
 uuid ={ version = "1.4.1",features = ["v4","fast-rng","macro-diagnostics"]}
+validator = { version = "0.12", features = ["derive"] }
 
 
 [dependencies.sea-orm]

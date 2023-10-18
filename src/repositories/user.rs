@@ -1,11 +1,13 @@
-use crate::models::user::{GetListUsersResponse, UserInfoRequest};
+use crate::{
+    common::utils::create_uuid,
+    models::user::{GetListUsersResponse, UserInfoRequest},
+};
 use chrono::Local;
 use entity::{user, user_info};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, QueryFilter,
     QuerySelect, Set,
 };
-use uuid::Uuid;
 
 #[derive(Debug, Clone)]
 pub struct UserRepository {
@@ -14,19 +16,23 @@ pub struct UserRepository {
 
 impl UserRepository {
     pub async fn get_users(&self) -> Vec<GetListUsersResponse> {
-        let mut result: Vec<GetListUsersResponse> = Vec::new();
-        let data = user::Entity::find()
+        let result = user::Entity::find()
             .find_with_related(entity::user_info::Entity)
             .all(&self.db_conn)
-            .await
-            .into_iter();
-        for item in data {
-            result.push(GetListUsersResponse {
-                user: item[0].0.to_owned(),
-                user_info: item[0].1.to_owned(),
-            })
+            .await;
+
+        if result.is_err() {
+            return Vec::new();
         }
+
         result
+            .unwrap()
+            .into_iter()
+            .map(|val| GetListUsersResponse {
+                user: val.0.to_owned(),
+                user_info: val.1.to_owned(),
+            })
+            .collect()
     }
 
     pub async fn insert_user(&self, data: user::ActiveModel) -> Option<user::Model> {
@@ -45,13 +51,19 @@ impl UserRepository {
             .await
     }
 
+    pub async fn register_user(
+
+    ){
+        
+    }
+
     pub async fn get_user_info_by_id(
         &self,
-        user_info_id:&String
-    )->Result<Vec<user_info::Model>,DbErr>{
-     user_info::Entity::find_by_id(user_info_id)
-        .all(&self.db_conn)
-        .await
+        user_info_id: &String,
+    ) -> Result<Vec<user_info::Model>, DbErr> {
+        user_info::Entity::find_by_id(user_info_id)
+            .all(&self.db_conn)
+            .await
     }
 
     pub async fn insert_user_info(
@@ -66,40 +78,44 @@ impl UserRepository {
             Ok(value) => {
                 let user = value.unwrap();
 
-                let mut data_info: Vec<user_info::ActiveModel> = Vec::new();
-                let mut save_for_returning: Vec<user_info::Model> = Vec::new();
+                let data: Vec<user_info::ActiveModel> = infos
+                    .into_iter()
+                    .map(|info| {
+                        let date = Local::now().naive_local();
+                        let id = create_uuid();
+                        return user_info::ActiveModel {
+                            id: Set(id.clone()),
+                            user_id: Set(user.id.to_string()),
+                            name: Set(info.name.to_string()),
+                            value: Set(info.value.to_string()),
+                            created_at: Set(Some(date)),
+                            updated_at: Set(Some(date)),
+                            ..Default::default()
+                        };
+                    })
+                    .collect();
 
-                for info in infos {
-                    let date = Local::now().naive_local();
-                    let id = Uuid::new_v4().as_simple().to_string();
-                    data_info.push(user_info::ActiveModel {
-                        id: Set(id.clone()),
-                        user_id: Set(user.id.to_string()),
-                        name: Set(info.name.to_string()),
-                        value: Set(info.value.to_string()),
-                        created_at: Set(Some(date)),
-                        updated_at: Set(Some(date)),
-                        ..Default::default()
-                    });
-                    save_for_returning.push(user_info::Model {
-                        id,
-                        user_id: user.id.to_string(),
-                        name: info.name.to_string(),
-                        value: info.value.to_string(),
-                        created_at: Some(date),
-                        updated_at: Some(date)
-                    });
-                }
+                let saved: Vec<user_info::Model> = data
+                    .clone()
+                    .into_iter()
+                    .map(|info| {
+                        return user_info::Model {
+                            id: info.id.into_value().unwrap().to_string(),
+                            user_id: user.id.to_string(),
+                            name: info.name.into_value().unwrap().to_string(),
+                            value: info.value.into_value().unwrap().to_string(),
+                            created_at: info.created_at.unwrap(),
+                            updated_at: info.updated_at.unwrap(),
+                        };
+                    })
+                    .collect();
 
-        
-                    user_info::Entity::insert_many(data_info)
+                user_info::Entity::insert_many(data)
                     .exec(&self.db_conn)
                     .await?;
-                
 
-                Ok(save_for_returning.to_owned())
+                Ok(saved.to_owned())
             }
         }
     }
-
 }
