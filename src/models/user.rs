@@ -18,3 +18,10 @@ pub struct GetListUsersResponse{
     pub user:user::Model,
     pub user_info:Vec<user_info::Model>
 }
+
+#[derive(Serialize,Deserialize)]
+pub struct SignUpRequest{
+    pub full_name:String,
+    pub email:String,
+    pub password:String
+}

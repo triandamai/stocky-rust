@@ -1,6 +1,6 @@
 use crate::{
     common::utils::create_uuid,
-    models::user::{GetListUsersResponse, UserInfoRequest},
+    models::{user::{GetListUsersResponse, UserInfoRequest}, self},
 };
 use chrono::Local;
 use entity::{user, user_info};
@@ -46,15 +46,41 @@ impl UserRepository {
     pub async fn get_user_by_email(&self, email: &String) -> Result<Option<user::Model>, DbErr> {
         user::Entity::find()
             .filter(user::Column::Email.contains(email))
-            .limit(1)
             .one(&self.db_conn)
             .await
     }
 
     pub async fn register_user(
+        &self,
+        req:models::user::SignUpRequest
+    )->Result<user::Model,String>{
+        let user_exist = self.get_user_by_email(
+            &req.email
+        )
+        .await;
 
-    ){
+        if user_exist.is_err(){
+            return Err(String::from(""));
+        }
+        if user_exist.unwrap().is_some(){
+            return Err(String::from("Email already taken"))
+        }
+        let data = user::ActiveModel{
+            email:Set(req.email),
+            password:Set(req.password),
+            full_name:Set(req.full_name),
+            ..Default::default()
+        };
+
+        let saved = data.insert(&self.db_conn)
+        .await;
         
+        if saved.is_err(){
+            return Err(String::from(""));
+        }
+
+        return Ok(saved.unwrap());
+
     }
 
     pub async fn get_user_info_by_id(
