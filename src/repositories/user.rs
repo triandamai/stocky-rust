@@ -5,8 +5,7 @@ use crate::{
 use chrono::Local;
 use entity::{user, user_info};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, QueryFilter,
-    QuerySelect, Set,
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, QueryFilter, Set,
 };
 
 #[derive(Debug, Clone)]
