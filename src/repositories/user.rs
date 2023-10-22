@@ -79,7 +79,6 @@ impl UserRepository {
         }
 
         return Ok(saved.unwrap());
-
     }
 
     pub async fn get_user_info_by_id(
