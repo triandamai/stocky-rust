@@ -2,7 +2,7 @@ use serde::{Serialize,Deserialize};
 use validator::Validate;
 
 #[derive(Debug,Serialize,Deserialize,Validate)]
-pub struct SignRequest {
+pub struct SignInBasicRequest {
     #[validate(email)]
     pub email:String,
     #[validate(length(min=6))]

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4f8b3f7f-f97f-4dfe-a31c-2d949aa38247" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/common/custom_error.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/request_filter/jwt_middleware.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/request_filter/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jpa-buddy.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/learn-actix.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/learn-actix.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/entity/Cargo.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/entity/src/lib.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/entity/src/mod.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/entity/src/prelude.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/entity/src/user.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/entity/src/user_info.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migration/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/migration/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migration/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/migration/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migration/src/m20220101_000001_create_table.rs" beforeDir="false" afterPath="$PROJECT_DIR$/migration/src/m20220101_000001_create_table.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migration/src/m20231017_030401_user_info.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/response.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/response.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/utils.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/utils.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/auth.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/user.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/user.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repositories/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/repositories/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repositories/user.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/repositories/user.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/index.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/user.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/user.rs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="1wbv44df" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2Y1iwsfGeroRIBpGQ8d7wTVV6cc" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Run learn-actix.executor": "Debug",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Cargo.Run learn-actix">
+    <configuration name="Run learn-actix" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package learn-actix --bin learn-actix" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <envs />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run migration" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package migration --bin migration" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <envs />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test learn-actix" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="test --workspace" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <envs />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4f8b3f7f-f97f-4dfe-a31c-2d949aa38247" name="Changes" comment="" />
+      <created>1699699728098</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1699699728098</updated>
+      <workItem from="1699699729355" duration="24762000" />
+      <workItem from="1699742211758" duration="1300000" />
+      <workItem from="1699743858370" duration="2082000" />
+      <workItem from="1699797346091" duration="4989000" />
+      <workItem from="1699802352392" duration="3762000" />
+      <workItem from="1699806131587" duration="2663000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
