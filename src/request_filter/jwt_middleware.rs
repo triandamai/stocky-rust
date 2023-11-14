@@ -8,7 +8,7 @@ use migration::async_trait::async_trait;
 use crate::{common, common::response::ErrorResponse};
 
 pub struct JwtMiddleware {
-    pub user_id: String,
+    pub session_id: String,
 }
 
 #[async_trait]
@@ -40,6 +40,6 @@ impl FromRequest for JwtMiddleware {
             Err(e) => return ready(Err(ErrorResponse::unauthorized(e.to_string()))),
         };
 
-        ready(Ok(JwtMiddleware { user_id:claims.sub }))
+        ready(Ok(JwtMiddleware { session_id:claims.sub }))
     }
 }

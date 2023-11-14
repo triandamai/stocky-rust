@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use actix_web::{Responder, Result, web};
 use actix_web::web::Json;
 
@@ -10,19 +11,14 @@ pub async fn get_users(
     jwt: request_filter::jwt_middleware::JwtMiddleware,
 ) -> Result<impl Responder, ErrorResponse> {
     let auth_repo = AuthRepository::init(&state);
-    let user = auth_repo.get_current_sign_in(
-        jwt.user_id.to_string()
+    let user:Option<HashMap<String,String>> = auth_repo.get_user_session(
+        jwt.session_id.to_string()
     ).await;
 
     if user.is_none() {
         return Err(ErrorResponse::create(401, "cannot found user".to_string()));
     }
-
-    let result = user.unwrap();
-    Ok(Json(models::auth::SignInBasicRequest {
-        email: result.0.id,
-        password: result.0.token.unwrap(),
-    }))
+    Ok(Json(BaseResponse::success(200, user.unwrap(), "Success".to_string())))
 }
 
 pub async fn sign_in_basic(
@@ -32,7 +28,7 @@ pub async fn sign_in_basic(
     return Ok(Json(BaseResponse::success(
         200,
         Some(""),
-        "".to_string()
+        "".to_string(),
     )));
 }
 

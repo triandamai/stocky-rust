@@ -22,7 +22,7 @@ env_logger="0.10.1"
 jsonwebtoken = "9.1.0"
 serde_json = "1.0.108"
 bcrypt = "0.15.0"
-redis = {version = "0.23.3",features = ["json","script"]}
+redis = {version = "0.23.3",features = ["json","script","serde_json"]}
 
 [dependencies.sea-orm]
 version = "0.12.4"

@@ -11,14 +11,6 @@ use crate::entity::sea_orm_active_enums::{AuthProvider, Status};
 use crate::models::auth::{SignInBasicRequest, SignUpBasicRequest, VerifyOtpRequest};
 use crate::repositories::auth::AuthRepository;
 
-pub async fn get_token() -> Result<impl Responder> {
-    return Ok(web::Json(BaseResponse::<Option<String>>::success(
-        200,
-        Some("".to_string()),
-        "".to_string(),
-    )));
-}
-
 pub async fn sign_in_basic(
     state: web::Data<AppState>,
     body: web::Json<SignInBasicRequest>,
@@ -31,7 +23,7 @@ pub async fn sign_in_basic(
     }
 
     //find related account
-    let auth_repo = AuthRepository::init(&state);
+    let mut auth_repo = AuthRepository::init(&state);
     let find_user = auth_repo.get_user_by_email(&body.email).await;
     if find_user.is_none() {
         return Err(ErrorResponse::unauthorized("Cannot find user ".to_string()));
@@ -51,14 +43,18 @@ pub async fn sign_in_basic(
     if user.status == Status::Suspended {
         return Err(ErrorResponse::forbidden(1002, "Your account suspended".to_string()));
     }
-    if user.status != Status::Inactive {
+    if user.status == Status::Inactive {
         return Err(ErrorResponse::forbidden(1003, "Your account is inactive".to_string()));
     }
 
+    //set session
+    let save_session = auth_repo.set_user_session(&find_user.unwrap()).await;
+
+
     Ok(web::Json(BaseResponse::success(
         200,
-        Some("".to_string()),
-        "".to_string(),
+        save_session,
+        "Sign in success".to_string(),
     )))
 }
 
@@ -85,7 +81,7 @@ pub async fn sign_up_basic(
         &body.password.to_string(), DEFAULT_COST,
     );
     if hash_password.is_err() {
-        return Err(ErrorResponse::bad_request(400, "CAnnot".to_string()));
+        return Err(ErrorResponse::bad_request(400, "Cannot".to_string()));
     }
 
     let result = auth_repo.insert_user_basic(
@@ -107,12 +103,11 @@ pub async fn sign_up_basic(
 
     //send email otp
 
-
     Ok(web::Json(BaseResponse::success(200, Some(credential), "OTP Sent please check your email".to_string())))
 }
 
 pub async fn verify_otp(
-    state: web::Data<AppState>,
+    _: web::Data<AppState>,
     body: web::Json<VerifyOtpRequest>,
 ) -> Result<impl Responder, ErrorResponse> {
     let validate_body = body.validate();
@@ -123,11 +118,9 @@ pub async fn verify_otp(
     Ok(web::Json(BaseResponse::success(200, Some(""), "".to_string())))
 }
 
-
 pub fn auth_handler(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/auth")
-            .route("/generate", web::get().to(get_token))
             .route("/sign-in-basic", web::post().to(sign_in_basic))
             .route("/sign-up-basic", web::post().to(sign_up_basic))
             .route("/verify-otp", web::post().to(verify_otp))

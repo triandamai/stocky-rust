@@ -8,30 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f8b3f7f-f97f-4dfe-a31c-2d949aa38247" name="Changes" comment="feat: update">
+      <change afterPath="$PROJECT_DIR$/redis-stack/redis.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/custom_error.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/custom_error.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/response.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/response.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/utils.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/utils.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/admin.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/admin.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/admin_access.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/admin_access.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/device.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/device.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/sea_orm_active_enums.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/sea_orm_active_enums.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/system_access.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/system_access.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/user_credential.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/user_credential.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/user_login.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/user_login.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/user_profile.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/user_profile.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/user_report.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/user_report.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/user_verification.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/user_verification.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migration/src/m20220101_000001_create_table.rs" beforeDir="false" afterPath="$PROJECT_DIR$/migration/src/m20220101_000001_create_table.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/models/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/auth.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/repositories/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/repositories/auth.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/request_filter/jwt_middleware.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/request_filter/jwt_middleware.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes/auth.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/auth.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/index.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes/user.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/user.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,11 +53,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Cargo.Run learn-actix.executor": "Debug",
+    "Cargo.Run learn-actix.executor": "Run",
+    "Docker.docker-compose.yml.cache: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/triandamai/Projects/learn-actix/redis-stack",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -81,6 +70,14 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/redis-stack" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/redis-stack" />
+    </key>
+  </component>
   <component name="RunManager" selected="Cargo.Run learn-actix">
     <configuration name="Run learn-actix" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="command" value="run --package learn-actix --bin learn-actix" />
@@ -145,8 +142,22 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration name="docker-compose.yml.cache: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="cache" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.docker-compose.yml.cache: Compose Deployment" />
         <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
       </list>
     </recent_temporary>
@@ -167,7 +178,7 @@
       <workItem from="1699743858370" duration="2082000" />
       <workItem from="1699797346091" duration="4989000" />
       <workItem from="1699802352392" duration="3762000" />
-      <workItem from="1699806131587" duration="26455000" />
+      <workItem from="1699806131587" duration="46307000" />
     </task>
     <task id="LOCAL-00001" summary="feat: update">
       <option name="closed" value="true" />
@@ -190,6 +201,27 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="be380b30-9f4b-4f8b-aa91-53deebb45724" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="be380b30-9f4b-4f8b-aa91-53deebb45724">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: update" />

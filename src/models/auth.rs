@@ -1,4 +1,5 @@
-use serde::{Serialize,Deserialize};
+use redis::FromRedisValue;
+use serde::{Deserialize, Serialize};
 use validator::Validate;
 
 #[derive(Debug,Serialize,Deserialize,Validate)]
@@ -25,4 +26,13 @@ pub struct VerifyOtpRequest {
     pub session_id:String,
     #[validate(length(min=4))]
     pub code:String
+}
+
+#[derive(Debug,Serialize,Deserialize,Validate)]
+pub struct SessionModel {
+    pub session_id:String,
+    pub full_name:String,
+    pub email:String,
+    pub token:String,
+    pub permission:Vec<String>
 }

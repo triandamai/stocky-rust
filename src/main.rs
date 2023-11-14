@@ -3,8 +3,9 @@ use actix_web::error::InternalError;
 use actix_web::http::StatusCode;
 use actix_web::web::Data;
 use dotenv::dotenv;
+use redis::{Client, Commands};
 use sea_orm::{Database, DatabaseConnection};
-use redis::{Client, Commands, Connection};
+
 use crate::common::response::ErrorResponse;
 
 mod common;
@@ -17,7 +18,6 @@ mod routes;
 
 #[derive(Debug, Clone)]
 pub struct AppState {
-    secret: String,
     db: DatabaseConnection,
     cache: Client,
 }
@@ -41,24 +41,23 @@ async fn main() -> std::io::Result<()> {
         Ok(val) => val,
         Err(_) => String::from("redis//:eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@localhost:6379")
     };
-    let db = Database::connect(postgres_url)
-        .await.expect("failed to connect postgres");
+    let db = Database::connect(postgres_url).await
+        .expect("failed to connect postgres");
     let cache = Client::open(redis_url)
         .expect("Invalid connection Url");
 
-    let state = AppState { db: db.clone(), cache:cache.clone(), secret: jwt_secret };
+    let state = AppState { db: db.clone(), cache:cache.clone() };
 
     HttpServer::new(move || {
         App::new()
             .app_data(Data::new(state.clone()))
-            .app_data(web::Data::new(String::from("secret")))
-            .app_data(web::JsonConfig::default().error_handler(|err, req| {
+            .app_data(web::JsonConfig::default().error_handler(|err, _| {
                 InternalError::from_response(format!("cause {}",err.to_string()), HttpResponse::build(StatusCode::BAD_REQUEST)
                     .json(ErrorResponse::bad_request(1000, err.to_string())))
                     .into()
             }))
             .wrap(middleware::Logger::default())
-            .wrap(middleware::Logger::new("%a %t %p %{User-Agent}i"))
+            .wrap(middleware::Logger::new("%a %r %s %b %{Referer}i %{User-Agent}i %T"))
             .configure(init)
     })
         .bind(("127.0.0.1", 8080))?

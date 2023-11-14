@@ -1,6 +1,8 @@
 use sea_orm::{EnumIter, Iterable};
 use sea_orm_migration::prelude::*;
 
+use crate::extension::postgres::Type;
+
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
@@ -8,6 +10,32 @@ pub struct Migration;
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         // Replace the sample below with your own migration scripts
+        manager
+            .create_type(
+                Type::create()
+                    .as_enum(Status::Table)
+                    .values(Status::iter().skip(1))
+                    .to_owned()
+            )
+            .await?;
+
+        manager
+            .create_type(
+                Type::create()
+                    .as_enum(AuthProvider::Table)
+                    .values(AuthProvider::iter().skip(1))
+                    .to_owned()
+            )
+            .await?;
+
+        manager
+            .create_type(
+                Type::create()
+                    .as_enum(VerificationType::Table)
+                    .values(VerificationType::iter().skip(1))
+                    .to_owned()
+            )
+            .await?;
 
         manager
             .create_table(
