@@ -4,6 +4,7 @@ use actix_web::http::StatusCode;
 use actix_web::web::Data;
 use dotenv::dotenv;
 use sea_orm::{Database, DatabaseConnection};
+use redis::{Client, Commands, Connection};
 use crate::common::response::ErrorResponse;
 
 mod common;
@@ -18,6 +19,7 @@ mod routes;
 pub struct AppState {
     secret: String,
     db: DatabaseConnection,
+    cache: Client,
 }
 
 #[actix_web::main]
@@ -27,26 +29,32 @@ async fn main() -> std::io::Result<()> {
     if std::env::var_os("RUST_LOG").is_none() {
         std::env::set_var("RUST_LOG", "actix_web=info")
     }
-    let url = match std::env::var("DATABASE_URL") {
+    let postgres_url = match std::env::var("DATABASE_URL") {
         Ok(val) => val,
         Err(_) => String::from("postgres://admin:password123@localhost:5432/actix"),
     };
-    let secret = match std::env::var("JWT_SECRET") {
+    let jwt_secret = match std::env::var("JWT_SECRET") {
         Ok(val) => val,
         Err(_) => String::from("thisisverysecret"),
     };
-    let db = Database::connect(url).await.unwrap();
+    let redis_url = match std::env::var("REDIS_URL") {
+        Ok(val) => val,
+        Err(_) => String::from("redis//:eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@localhost:6379")
+    };
+    let db = Database::connect(postgres_url)
+        .await.expect("failed to connect postgres");
+    let cache = Client::open(redis_url)
+        .expect("Invalid connection Url");
 
-    let state = AppState { db: db.clone(), secret };
+    let state = AppState { db: db.clone(), cache:cache.clone(), secret: jwt_secret };
 
     HttpServer::new(move || {
         App::new()
             .app_data(Data::new(state.clone()))
             .app_data(web::Data::new(String::from("secret")))
             .app_data(web::JsonConfig::default().error_handler(|err, req| {
-                InternalError::from_response("",
-                                             HttpResponse::build(StatusCode::BAD_REQUEST)
-                                                 .json(ErrorResponse::bad_request(1000, err.to_string())))
+                InternalError::from_response(format!("cause {}",err.to_string()), HttpResponse::build(StatusCode::BAD_REQUEST)
+                    .json(ErrorResponse::bad_request(1000, err.to_string())))
                     .into()
             }))
             .wrap(middleware::Logger::default())

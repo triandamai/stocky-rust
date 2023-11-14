@@ -5,9 +5,39 @@ use std::option::Option;
 
 #[derive(Serialize, Debug)]
 pub struct BaseResponse<T> {
-    pub status_code: i32,
+    pub status_code: u16,
+    pub error_code: u16,
     pub data: Option<T>,
     pub message: String,
+}
+
+impl<T> BaseResponse<T> {
+    pub fn created(status_code:u16,data:T,message:String)->BaseResponse<T>{
+        BaseResponse::<T>{
+            status_code,
+            message,
+            data:Some(data),
+            error_code: status_code,
+        }
+    }
+
+    pub fn success(status_code:u16,data:T,message:String)->BaseResponse<T>{
+        BaseResponse::<T>{
+            status_code,
+            message,
+            data:Some(data),
+            error_code: status_code,
+        }
+    }
+
+    pub fn not_found(status_code:u16,data:T,message:String)->BaseResponse<T>{
+        BaseResponse::<T>{
+            status_code,
+            message,
+            data:Some(data),
+            error_code: status_code,
+        }
+    }
 }
 
 #[derive(Debug, Serialize)]

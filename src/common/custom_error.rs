@@ -3,6 +3,7 @@ use actix_web::http::StatusCode;
 use actix_web::{HttpResponse, ResponseError};
 use serde::de::Error as SerdeError;
 use serde::{Deserialize, Serialize};
+use crate::common::utils::get_readable_validation_message;
 
 #[derive(Debug,Serialize,Deserialize)]
 pub enum CustomErrorType {
@@ -17,15 +18,6 @@ pub struct CustomError {
     pub err_type: CustomErrorType,
 }
 
-impl CustomError {
-    pub fn message(&self) -> String {
-        match &self.message {
-            Some(c) => c.clone(),
-            None => String::from(""),
-        }
-    }
-}
-
 impl std::fmt::Display for CustomError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
@@ -34,19 +26,8 @@ impl std::fmt::Display for CustomError {
 
 impl From<validator::ValidationErrors> for CustomError {
     fn from(err: validator::ValidationErrors) -> CustomError {
-        let message = err.field_errors().into_iter()
-            .map(|v|{
-                let message:String = v.1.into_iter().map(|er|{
-                    let message = match er.clone().message{
-                        Some(val)=>val.to_string(),
-                        None=>String::from("<no message>")
-                    };
-                    return format!("{}",message)
-                }).collect();
-                return format!("Field {} {} ",v.0,message);
-            }).collect();
         CustomError {
-            message: Some(message),
+            message: Some(get_readable_validation_message(err)),
             err_type: CustomErrorType::ValidationError,
         }
     }

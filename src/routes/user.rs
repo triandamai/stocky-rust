@@ -29,11 +29,11 @@ pub async fn sign_in_basic(
     _: web::Data<AppState>,
     _: web::Json<models::auth::SignInBasicRequest>,
 ) -> Result<impl Responder> {
-    return Ok(Json(BaseResponse {
-        status_code: 400,
-        message: String::from(""),
-        data: Some(""),
-    }));
+    return Ok(Json(BaseResponse::success(
+        200,
+        Some(""),
+        "".to_string()
+    )));
 }
 
 pub fn user_handler(cfg: &mut web::ServiceConfig) {

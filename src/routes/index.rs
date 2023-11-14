@@ -15,6 +15,7 @@ pub async fn hello(_state: web::Data<AppState>) -> Result<impl Responder> {
         data: Some(IndexResponse {
             hello: String::from("Trian"),
         }),
+        error_code: 0,
     };
     Ok(web::Json(obj))
 }
