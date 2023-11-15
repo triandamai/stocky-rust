@@ -97,7 +97,7 @@ pub async fn sign_up_basic(
     let credential = result.unwrap();
 
     //begin save otp then send to user
-    let create_verification_otp = auth_repo.create_user_verification(
+    let _ = auth_repo.create_user_verification(
         &credential.clone()
     ).await;
 

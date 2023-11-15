@@ -43,7 +43,7 @@ impl AuthRepository {
             permission: vec![],
         };
 
-        let session_id:String = format!("session:{}", user.id.to_string());
+        let session_id:String = format!("sessions#{}", user.id.to_string());
         let result: Result<String,redis::RedisError> = self.cache.get_connection()
             .unwrap()
             .hset_multiple(session_id.clone(), &[

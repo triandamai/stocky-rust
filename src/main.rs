@@ -3,7 +3,7 @@ use actix_web::error::InternalError;
 use actix_web::http::StatusCode;
 use actix_web::web::Data;
 use dotenv::dotenv;
-use redis::{Client, Commands};
+use redis::Client;
 use sea_orm::{Database, DatabaseConnection};
 
 use crate::common::response::ErrorResponse;
@@ -26,20 +26,16 @@ pub struct AppState {
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
     std::env::set_var("RUST_BACKTRACE", "full".to_string());
-    if std::env::var_os("RUST_LOG").is_none() {
+    if std::env::var("RUST_LOG").is_err() {
         std::env::set_var("RUST_LOG", "actix_web=info")
     }
     let postgres_url = match std::env::var("DATABASE_URL") {
         Ok(val) => val,
-        Err(_) => String::from("postgres://admin:password123@localhost:5432/actix"),
-    };
-    let jwt_secret = match std::env::var("JWT_SECRET") {
-        Ok(val) => val,
-        Err(_) => String::from("thisisverysecret"),
+        Err(_) => String::from("postgres://user:password@host:port/db"),
     };
     let redis_url = match std::env::var("REDIS_URL") {
         Ok(val) => val,
-        Err(_) => String::from("redis//:eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@localhost:6379")
+        Err(_) => String::from("redis://user:password@host:port")
     };
     let db = Database::connect(postgres_url).await
         .expect("failed to connect postgres");
