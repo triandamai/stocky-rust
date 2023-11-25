@@ -13,8 +13,8 @@ pub struct JwtMiddleware {
 
 #[async_trait]
 impl FromRequest for JwtMiddleware {
-    //this should type to actix::web::Error but the return is string text/plain so we create custom error
-    //see response::ErrorResponse implementation
+    //this should type to actix::web::Error but the return is string text/plain
+    // so that we create custom error see response::ErrorResponse for the implementation
     type Error = ErrorResponse;
     type Future = Ready<Result<Self, Self::Error>>;
     fn from_request(req: &HttpRequest, _: &mut Payload) -> Self::Future {
@@ -37,9 +37,11 @@ impl FromRequest for JwtMiddleware {
             token.unwrap().to_string()
         ) {
             Ok(c) => c.claims,
-            Err(e) => return ready(Err(ErrorResponse::unauthorized(e.to_string()))),
+            Err(e) => return ready(Err(ErrorResponse::unauthorized(
+                e.to_string()
+            ))),
         };
 
-        ready(Ok(JwtMiddleware { session_id:claims.sub }))
+        ready(Ok(JwtMiddleware { session_id: claims.sub }))
     }
 }

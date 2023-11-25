@@ -12,38 +12,51 @@ pub struct BaseResponse<T> {
 }
 
 impl<T> BaseResponse<T> {
-    pub fn created(status_code:u16,data:T,message:String)->BaseResponse<T>{
-        BaseResponse::<T>{
-            status_code,
+    fn create(
+        status_code: StatusCode,
+        error_code: u16,
+        message: String,
+        data: Option<T>,
+    ) -> BaseResponse<T> {
+        BaseResponse {
+            status_code: status_code.as_u16(),
+            error_code,
             message,
-            data:Some(data),
-            error_code: status_code,
+            data,
         }
     }
-
-    pub fn success(status_code:u16,data:T,message:String)->BaseResponse<T>{
-        BaseResponse::<T>{
-            status_code,
+    pub fn created(code: u16, data: T, message: String) -> BaseResponse<T> {
+        BaseResponse::<T>::create(
+            StatusCode::CREATED,
+            code,
             message,
-            data:Some(data),
-            error_code: status_code,
-        }
+            Some(data),
+        )
     }
 
-    pub fn not_found(status_code:u16,data:T,message:String)->BaseResponse<T>{
-        BaseResponse::<T>{
-            status_code,
+    pub fn success(code: u16, data: T, message: String) -> BaseResponse<T> {
+        BaseResponse::<T>::create(
+            StatusCode::OK,
+            code,
             message,
-            data:Some(data),
-            error_code: status_code,
-        }
+            Some(data),
+        )
+    }
+
+    pub fn not_found(code: u16, data: T, message: String) -> BaseResponse<T> {
+        BaseResponse::<T>::create(
+            StatusCode::NOT_FOUND,
+            code,
+            message,
+            Some(data),
+        )
     }
 }
 
 #[derive(Debug, Serialize)]
 pub struct ErrorResponse {
     pub status_code: u16,
-    pub error_code:u16,
+    pub error_code: u16,
     pub data: Option<String>,
     pub message: String,
 }
@@ -52,15 +65,15 @@ impl ErrorResponse {
     pub fn create(status_code: u16, message: String) -> ErrorResponse {
         ErrorResponse {
             status_code,
-            error_code:status_code,
+            error_code: status_code,
             message,
             data: None,
         }
     }
-    pub fn unauthorized( message: String) -> ErrorResponse {
+    pub fn unauthorized(message: String) -> ErrorResponse {
         ErrorResponse {
-            status_code:401,
-            error_code:401,
+            status_code: 401,
+            error_code: 401,
             message,
             data: None,
         }
@@ -68,7 +81,7 @@ impl ErrorResponse {
 
     pub fn forbidden(error_code: u16, message: String) -> ErrorResponse {
         ErrorResponse {
-            status_code:403,
+            status_code: 403,
             error_code,
             message,
             data: None,
@@ -76,7 +89,7 @@ impl ErrorResponse {
     }
     pub fn bad_request(error_code: u16, message: String) -> ErrorResponse {
         ErrorResponse {
-            status_code:400,
+            status_code: 400,
             error_code,
             message,
             data: None,

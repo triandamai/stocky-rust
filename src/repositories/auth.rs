@@ -3,14 +3,17 @@ use std::default::Default as time_default;
 
 use chrono::FixedOffset;
 use redis::{Client, Commands, RedisResult};
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, PaginatorTrait, QueryFilter};
 use sea_orm::ActiveValue::Set;
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, PaginatorTrait,
+    QueryFilter,
+};
 
-use crate::AppState;
 use crate::common::jwt::encode;
-use crate::entity::{user_credential, user_verification};
 use crate::entity::sea_orm_active_enums::{AuthProvider, Status, VerificationType};
-use crate::models::auth::SessionModel;
+use crate::entity::{user_credential, user_verification};
+use crate::models::auth::{SessionModel, VerifyOtpRequest};
+use crate::AppState;
 
 #[derive(Debug, Clone)]
 pub struct AuthRepository {
@@ -31,7 +34,7 @@ impl AuthRepository {
         &mut self,
         user: &user_credential::Model,
     ) -> Option<SessionModel> {
-        let token:Option<String> = encode(user.id.to_string());
+        let token: Option<String> = encode(user.id.to_string());
         if token.is_none() {
             return None;
         }
@@ -43,27 +46,33 @@ impl AuthRepository {
             permission: vec![],
         };
 
-        let session_id:String = format!("sessions#{}", user.id.to_string());
-        let result: Result<String,redis::RedisError> = self.cache.get_connection()
-            .unwrap()
-            .hset_multiple(session_id.clone(), &[
-                ("session_id", &session.session_id.to_string()),
-                ("full_name", &session.full_name.to_string()),
-                ("email", &session.email.to_string()),
-                ("token", &session.token.to_string())
-            ]);
-        let _:RedisResult<_> = self.cache.expire::<String,String>(session_id, 1000);
+        let session_id: String = format!("sessions:{}:profile", user.id.to_string());
+        let result: Result<String, redis::RedisError> =
+            self.cache.get_connection().unwrap().hset_multiple(
+                session_id.clone(),
+                &[
+                    ("session_id", &session.session_id.to_string()),
+                    ("full_name", &session.full_name.to_string()),
+                    ("email", &session.email.to_string()),
+                    ("token", &session.token.to_string()),
+                ],
+            );
+        let _: RedisResult<_> = self.cache.expire::<String, String>(
+            session_id,
+            1000,
+        );
         if result.is_err() {
             return None;
         }
         Some(session)
     }
 
-    pub async fn get_user_session(
-        &self,
-        session_id: String,
-    ) -> Option<HashMap<String, String>> {
-        let result: RedisResult<HashMap<String, String>> = self.cache.get_connection()
+    pub async fn get_user_session(&self, session_id: String) -> Option<HashMap<String, String>> {
+        let connection = self.cache.get_connection();
+        if connection.is_err() {
+            return None;
+        }
+        let result: RedisResult<HashMap<String, String>> = connection
             .unwrap()
             .hgetall(format!("session:{}", session_id));
         if result.is_err() {
@@ -72,24 +81,36 @@ impl AuthRepository {
         Some(result.unwrap())
     }
 
-    pub async fn is_email_used(
+    pub async fn get_verification_otp_from_cache(
         &self,
-        email: &String,
-    ) -> bool {
+        req: &VerifyOtpRequest,
+    ) -> Option<bool> {
+        let connection = self.cache.get_connection();
+        if connection.is_err() {
+            return None;
+        }
+        let get_otp_verification: RedisResult<String> = connection
+            .unwrap()
+            .get(format!("otp:{}", req.session_id.to_string()));
+        if get_otp_verification.is_err() {
+            return None;
+        }
+
+        Some(get_otp_verification.unwrap().eq(req.code.as_str()))
+    }
+
+    pub async fn is_email_used(&self, email: &String) -> bool {
         let find_email = user_credential::Entity::find()
             .filter(user_credential::Column::Email.eq(email))
             .count(&self.db)
             .await;
         match find_email {
             Ok(account) => account > 0,
-            Err(_) => false
+            Err(_) => false,
         }
     }
 
-    pub async fn get_user_by_email(
-        &self,
-        email: &String,
-    ) -> Option<user_credential::Model> {
+    pub async fn get_user_by_email(&self, email: &String) -> Option<user_credential::Model> {
         let find_user = user_credential::Entity::find()
             .filter(user_credential::Column::Email.eq(email))
             .one(&self.db)
@@ -101,7 +122,7 @@ impl AuthRepository {
                 }
                 return Some(user_credential.unwrap());
             }
-            Err(_) => None
+            Err(_) => None,
         }
     }
 

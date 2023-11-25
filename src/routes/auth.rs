@@ -10,6 +10,7 @@ use crate::common::utils::get_readable_validation_message;
 use crate::entity::sea_orm_active_enums::{AuthProvider, Status};
 use crate::models::auth::{SignInBasicRequest, SignUpBasicRequest, VerifyOtpRequest};
 use crate::repositories::auth::AuthRepository;
+use crate::models::auth::SessionModel;
 
 pub async fn sign_in_basic(
     state: web::Data<AppState>,
@@ -48,7 +49,7 @@ pub async fn sign_in_basic(
     }
 
     //set session
-    let save_session = auth_repo.set_user_session(&find_user.unwrap()).await;
+    let save_session:Option<SessionModel> = auth_repo.set_user_session(&find_user.unwrap()).await;
 
 
     Ok(web::Json(BaseResponse::success(
@@ -103,7 +104,7 @@ pub async fn sign_up_basic(
 
     //send email otp
 
-    Ok(web::Json(BaseResponse::success(200, Some(credential), "OTP Sent please check your email".to_string())))
+    Ok(web::Json(BaseResponse::created(201, Some(credential), "OTP Sent please check your email".to_string())))
 }
 
 pub async fn verify_otp(
@@ -114,7 +115,7 @@ pub async fn verify_otp(
     if validate_body.is_err() {
         return Err(ErrorResponse::bad_request(400, "invalid request".to_string()));
     }
-
+    
     Ok(web::Json(BaseResponse::success(200, Some(""), "".to_string())))
 }
 
