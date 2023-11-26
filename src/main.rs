@@ -57,7 +57,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .wrap(middleware::Logger::default())
+            // .wrap(middleware::Logger::default())
             .wrap(middleware::Logger::new(
                 "%a %r %s %b %{Referer}i %{User-Agent}i %T",
             ))
@@ -72,12 +72,11 @@ async fn main() -> std::io::Result<()> {
                                 err.to_string(),
                             )
                         ),
-                )
-                    .into()
+                ).into()
             }))
             .configure(init)
     })
-        .bind(("127.0.0.1", 8080))?
+        .bind(("0.0.0.0", 8080))?
         .run()
         .await
 }

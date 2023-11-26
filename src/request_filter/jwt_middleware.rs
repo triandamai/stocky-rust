@@ -2,10 +2,13 @@ use std::future::{ready, Ready};
 
 use actix_web::{FromRequest, http, HttpRequest};
 use actix_web::dev::Payload;
+use jsonwebtoken::errors::Error;
+use jsonwebtoken::TokenData;
 
 use migration::async_trait::async_trait;
 
 use crate::{common, common::response::ErrorResponse};
+use crate::common::jwt::JwtUtils;
 
 pub struct JwtMiddleware {
     pub session_id: String,
@@ -33,13 +36,10 @@ impl FromRequest for JwtMiddleware {
             )));
         }
 
-        let claims = match common::jwt::decode(
-            token.unwrap().to_string()
-        ) {
-            Ok(c) => c.claims,
-            Err(e) => return ready(Err(ErrorResponse::unauthorized(
-                e.to_string()
-            ))),
+        let claims = match JwtUtils::from_token(token.unwrap().to_string())
+            .decode(){
+            Ok(claims) => claims.claims,
+            Err(error) => return ready(Err(ErrorResponse::unauthorized(error.to_string())))
         };
 
         ready(Ok(JwtMiddleware { session_id: claims.sub }))

@@ -3,17 +3,18 @@ use std::default::Default as time_default;
 
 use chrono::FixedOffset;
 use redis::{Client, Commands, RedisResult};
-use sea_orm::ActiveValue::Set;
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, PaginatorTrait,
     QueryFilter,
 };
+use sea_orm::ActiveValue::Set;
 
-use crate::common::jwt::encode;
-use crate::entity::sea_orm_active_enums::{AuthProvider, Status, VerificationType};
-use crate::entity::{user_credential, user_verification};
-use crate::models::auth::{SessionModel, VerifyOtpRequest};
 use crate::AppState;
+use crate::common::jwt::JwtUtils;
+use crate::common::redisutils;
+use crate::entity::{user_credential, user_verification};
+use crate::entity::sea_orm_active_enums::{AuthProvider, Status, VerificationType};
+use crate::models::auth::{SessionModel, VerifyOtpRequest};
 
 #[derive(Debug, Clone)]
 pub struct AuthRepository {
@@ -34,7 +35,7 @@ impl AuthRepository {
         &mut self,
         user: &user_credential::Model,
     ) -> Option<SessionModel> {
-        let token: Option<String> = encode(user.id.to_string());
+        let token: Option<String> = JwtUtils::create_claim(user.id.to_string()).encode();
         if token.is_none() {
             return None;
         }
@@ -46,7 +47,8 @@ impl AuthRepository {
             permission: vec![],
         };
 
-        let session_id: String = format!("sessions:{}:profile", user.id.to_string());
+        let session_id: String = redisutils::create_user_session_key(&user.id);
+
         let result: Result<String, redis::RedisError> =
             self.cache.get_connection().unwrap().hset_multiple(
                 session_id.clone(),

@@ -51,7 +51,6 @@ pub async fn sign_in_basic(
     //set session
     let save_session:Option<SessionModel> = auth_repo.set_user_session(&find_user.unwrap()).await;
 
-
     Ok(web::Json(BaseResponse::success(
         200,
         save_session,
