@@ -13,7 +13,7 @@ use crate::AppState;
 use crate::common::jwt::JwtUtils;
 use crate::common::redisutils;
 use crate::entity::{user_credential, user_verification};
-use crate::entity::sea_orm_active_enums::{AuthProvider, Status, VerificationType};
+use crate::entity::sea_orm_active_enums::{AuthProvider, UserStatus, VerificationType};
 use crate::models::auth::{SessionModel, VerifyOtpRequest};
 
 #[derive(Debug, Clone)]
@@ -142,7 +142,7 @@ impl AuthRepository {
             email: Set(email.to_string()),
             full_name: Set(full_name.to_string()),
             password: Set(password.to_string()),
-            status: Set(Status::WaitingConfirmation),
+            status: Set(UserStatus::WaitingConfirmation),
             auth_provider: Set(AuthProvider::Basic),
             created_at: Set(current_date),
             updated_at: Set(current_date),
