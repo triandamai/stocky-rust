@@ -35,10 +35,13 @@ impl AuthRepository {
         &mut self,
         user: &user_credential::Model,
     ) -> Option<SessionModel> {
+        //create token for claim
         let token: Option<String> = JwtUtils::create_claim(user.id.to_string()).encode();
         if token.is_none() {
             return None;
         }
+
+        //prepare data
         let session = SessionModel {
             session_id: user.id.to_string(),
             full_name: user.full_name.to_string(),
@@ -47,8 +50,10 @@ impl AuthRepository {
             permission: vec![],
         };
 
+        //generate session id redis
         let session_id: String = redisutils::create_user_session_key(&user.id);
 
+        //session data HMSET
         let result: Result<String, redis::RedisError> =
             self.cache.get_connection().unwrap().hset_multiple(
                 session_id.clone(),
@@ -59,6 +64,8 @@ impl AuthRepository {
                     ("token", &session.token.to_string()),
                 ],
             );
+
+        //set expire session(ms)
         let _: RedisResult<_> = self.cache.expire::<String, String>(
             session_id,
             1000,
